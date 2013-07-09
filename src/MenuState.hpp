@@ -5,5 +5,7 @@
 
 class MenuState : public tank::State
 {
+public:
+    MenuState();
 };
 #endif /* MENUSTATE_HPP */
