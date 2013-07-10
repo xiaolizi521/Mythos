@@ -1,6 +1,6 @@
 #include "GameboyEntity.hpp"
 
-unsigned int GameboyEntity::scale_ = 3;
+unsigned int GameboyEntity::scale_ = 4;
 
 GameboyEntity::GameboyEntity(tank::Vectorf pos)
     : Entity(pos)

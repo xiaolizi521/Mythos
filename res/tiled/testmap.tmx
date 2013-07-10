@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="70" height="70" tilewidth="16" tileheight="16">
+ <tileset firstgid="1" name="terrain" tilewidth="16" tileheight="16">
+  <image source="../gfx/test_tiles.png" width="160" height="32"/>
+  <tile id="0">
+   <properties>
+    <property name="solid" value="false"/>
+   </properties>
+  </tile>
+  <tile id="1">
+   <properties>
+    <property name="solid" value="true"/>
+   </properties>
+  </tile>
+  <tile id="2">
+   <properties>
+    <property name="solid" value="true"/>
+   </properties>
+  </tile>
+  <tile id="3">
+   <properties>
+    <property name="solid" value="false"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="21" name="Player" tilewidth="16" tileheight="16">
+  <properties>
+   <property name="type" value="player"/>
+  </properties>
+  <image source="../gfx/test_char.png" width="64" height="64"/>
+ </tileset>
+ <layer name="Terrain" width="70" height="70">
+  <data encoding="base64" compression="zlib">
+   eJzt2EsKAjEQQMGoc/8ziytBngszovOpgj5APzqbjAEA+3H502ydLk2X9qsO13H8Lq876nLudzRzD2fo4l50eWftfrNvbuvcS9Ol6dJ0abo0Xb7vtmKO7LHfMjG66KLLky5Nl6ZL06Xp0nRpujRdmi5Nl6ZL06Xp0nRp/usAAAAAAAAAgE/cAfQLBho=
+  </data>
+ </layer>
+ <layer name="Interactables" width="70" height="70">
+  <data encoding="base64" compression="zlib">
+   eJztzjEBAAAMAiBLrH/VxfAQEpAAAAAATdcOAAAAAAAAAAAAAAAAAAAA0x5M3wAW
+  </data>
+ </layer>
+</map>
