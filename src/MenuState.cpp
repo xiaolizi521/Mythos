@@ -5,5 +5,5 @@
 
 MenuState::MenuState()
 {
-    makeEntity<StartText>(tank::Vectorf{50,60});
+    makeEntity<StartText>(tank::Vectorf{80, 20});
 }
