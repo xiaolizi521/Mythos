@@ -9,9 +9,8 @@ void GameboyEntity::draw(tank::Vectorf camera)
 {
     for (auto& g : getGraphicList())
     {
-        g->setPos(getPos() * scale_);
         g->setScale(scale_);
-    }
 
-    Entity::draw(camera);
+        g->draw(getPos() * scale_, getRotation(), camera);
+    }
 }
