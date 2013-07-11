@@ -2,10 +2,12 @@
 
 #include <sstream>
 #include <iostream>
+#include <stdexcept>
 #include <algorithm>
 #include <boost/property_tree/json_parser.hpp>
 #include "StartText.hpp"
 #include "Resources.hpp"
+#include "Tile.hpp"
 
 Level::Level(std::string name, GameState& parent)
     : parent_(parent)
@@ -13,25 +15,34 @@ Level::Level(std::string name, GameState& parent)
     std::stringstream filePath;
     filePath << "res/maps/" << name << ".json";
 
-    boost::property_tree::ptree levelTree;
-    boost::property_tree::read_json(filePath.str(), levelTree);
+    // Load mapfile
+    boost::property_tree::read_json(filePath.str(), mainTree_);
 
-    dimensions_.x = levelTree.get<unsigned int>("width");
-    dimensions_.y = levelTree.get<unsigned int>("height");
-    tileSize_ = levelTree.get<unsigned int>("tileheight");
+    // Set level properties
+    dimensions_.x = mainTree_.get<unsigned int>("width");
+    dimensions_.y = mainTree_.get<unsigned int>("height");
+    tileSize_ = mainTree_.get<unsigned int>("tileheight");
 
-    tilesets_ = levelTree.get_child("tilesets");
-    layers_ = levelTree.get_child("layers");
+    // Organize ptrees
+    tilesets_ = mainTree_.get_child("tilesets");
+    layers_ = mainTree_.get_child("layers");
+
+    boost::property_tree::ptree layers_ = mainTree_.get_child("layers");
+
+    map_.resize(dimensions_.x);
+    for(auto& column : map_)
+    {
+        column.resize(dimensions_.y);
+    }
 
     loadImages();
-    loadTerrain(levelTree);
-    loadInteractables(levelTree);
+    loadTerrain();
+    loadInteractables();
 
     //Testing code
     makeEntity<StartText>(tank::Vectorf{80.f, 100.f});
     tank::Entity* e = makeEntity<tank::Entity>(tank::Vectorf{});
     e->makeGraphic<tank::Image>(res::debugGrid);
-
 }
 
 void Level::loadImages()
@@ -48,36 +59,107 @@ void Level::loadImages()
     }
 }
 
-void Level::loadTerrain(boost::property_tree::ptree& levelTree)
+void Level::loadTerrain()
 {
-    boost::property_tree::ptree terrainLayer;
-
-    terrainLayer = std::find_if(layers_.begin(), layers_.end(),
-       [](std::pair<std::string, boost::property_tree::ptree> const& layer)
+    for (auto& layer : layers_)
     {
-        return layer.second.get<std::string>("name") == "Terrain";
-    })->second;
+        tank::Vectoru mapPos {};
 
-    int nonNull = 0;
-    for (auto& tile : terrainLayer.get_child("data"))
-    {
-        unsigned int id = tile.second.get_value<unsigned int>();
-        if (id) ++nonNull;
-    }
-
-    std::cout << nonNull << std::endl;
-    /*
-    for (auto&  layer: levelTree.get_child("layers"))
-    {
-        if(tileset.second.get<std::string>("name") == "Terrain")
+        if (layer.second.get<std::string>("type") == "tilelayer")
         {
-            terrainTree = tileset.second;
+            for (auto& tile : layer.second.get_child("data"))
+            {
+                //Testing
+                if (mapPos.x >= dimensions_.x or
+                    mapPos.y >= dimensions_.y)
+                {
+                    std::cout << "Crash and burn" << std::endl;
+                }
+
+                unsigned int tileID = tile.second.get_value<unsigned int>();
+
+                if (tileID)
+                {
+                    tank::Vectorf tilePos {static_cast<float>(mapPos.x * tileSize_),
+                                           static_cast<float>(mapPos.y * tileSize_)};
+
+
+                    auto tileset = getTileset(tileID);
+
+                    map_[mapPos.x][mapPos.y].push_back(
+                        makeEntity<Tile>(tilePos, getImage(tileID)));
+
+                }
+
+                std::cout << "Looking at " << mapPos.x
+                          << ", " << mapPos.y << std::endl;
+                //Next map position
+                if((mapPos.x + 1) % dimensions_.x)
+                {
+                    ++mapPos.x;
+                }
+                else
+                {
+                    mapPos.x = 0;
+                    ++mapPos.y;
+                }
+            }
+        }
+    }
+}
+
+void Level::loadInteractables()
+{
+}
+
+tank::Image Level::getImage(unsigned int index) const
+{
+    tank::Image image;
+
+    unsigned int key;
+    for(auto& keyVal : images_)
+    {
+        unsigned int currentKey = keyVal.first;
+        if(currentKey <= index)
+        {
+            key = currentKey;
+        }
+        else
+        {
             break;
         }
     }
-    */
+
+    image = images_.at(key);
+
+    // TODO: Maybe move this into tank::Image?
+    // TODO: Check for invalid y coord
+    tank::Rectu clip { 0, 0, tileSize_, tileSize_ };
+
+    unsigned int clipOffset = index - key;
+    unsigned int usefulSize = image.getTextureSize().x -
+                              ( image.getTextureSize().x % tileSize_ );
+    clip.x = tileSize_ * clipOffset % usefulSize;
+    clip.y = tileSize_ * clipOffset / usefulSize;
+    image.setClip(clip);
+
+    return image;
 }
 
-void Level::loadInteractables(boost::property_tree::ptree& levelTree)
+boost::property_tree::ptree Level::getTileset(unsigned int index)
 {
+    using boost::property_tree::ptree;
+
+    ptree::iterator lastIt = tilesets_.begin();
+    for (ptree::iterator it = tilesets_.begin(); it != tilesets_.end(); ++it)
+    {
+        if(it->second.get<unsigned int>("firstgid") > index)
+        {
+            return lastIt->second;
+        }
+        lastIt = it;
+    }
+
+    throw std::runtime_error("Could not find tileset from tileid");
 }
+
