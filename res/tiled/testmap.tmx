@@ -14,7 +14,7 @@
   </tile>
   <tile id="2">
    <properties>
-    <property name="solid" value="true"/>
+    <property name="solid" value="false"/>
    </properties>
   </tile>
   <tile id="3">
@@ -31,12 +31,24 @@
  </tileset>
  <layer name="Terrain" width="70" height="70">
   <data encoding="base64" compression="zlib">
-   eJzt2EsKAjEQQMGoc/8ziytBngszovOpgj5APzqbjAEA+3H502ydLk2X9qsO13H8Lq876nLudzRzD2fo4l50eWftfrNvbuvcS9Ol6dJ0abo0Xb7vtmKO7LHfMjG66KLLky5Nl6ZL06Xp0nRpujRdmi5Nl6ZL06Xp0nRp/usAAAAAAAAAgE/cAfQLBho=
+   eJzt2FEKwjAQRdHUdv9r1n4p8oKxDTSac2AWMJfJT5ZSytIws9l3Xh9zq8zMXWpNXtvMRpdMl0yXrLXLVXMVXbJPXbYyb5eR5v0+R9djR11+/x216nUPM3RxL7rUnN3v6JsbnXvJdMl0yXTJdMl06W89Mf9s3287MLroosuTLpkumS6ZLpkumS6ZLpkumS6ZLpkumS6ZLpkumf86AAAAAAAAAOAbd1fQBsA=
   </data>
  </layer>
- <layer name="Interactables" width="70" height="70">
-  <data encoding="base64" compression="zlib">
-   eJztzjEBAAAMAiBLrH/VxfAQEpAAAAAATdcOAAAAAAAAAAAAAAAAAAAA0x5M3wAW
-  </data>
- </layer>
+ <objectgroup name="Interactables" width="70" height="70">
+  <object name="Nesbit" type="civilian" gid="21" x="352" y="224">
+   <properties>
+    <property name="fixedText" value="false"/>
+    <property name="mobile" value="true"/>
+    <property name="textFile" value="../txt/anotherfile.xml"/>
+   </properties>
+  </object>
+  <object name="Jimbob" type="companion" gid="21" x="464" y="176">
+   <properties>
+    <property name="fixedText" value="true"/>
+    <property name="mobile" value="false"/>
+    <property name="textFile" value="../txt/afile.xml"/>
+   </properties>
+  </object>
+  <object gid="21" x="480" y="256"/>
+ </objectgroup>
 </map>
