@@ -17,7 +17,7 @@ GameState::GameState()
                                                       std::placeholders::_1));
     getEventHandler().registerKey(sf::Keyboard::Escape, "quit", false);
 
-    changeLevel("testmap");
+    currentLevel_.reset(new Level("testmap", *this));
     player_ = currentLevel_->makeEntity<Player>(tank::Vectorf{0.f,0.f}, *currentLevel_, *this);
 }
 
@@ -45,4 +45,3 @@ void GameState::draw()
 {
     currentLevel_->draw();
 }
-
