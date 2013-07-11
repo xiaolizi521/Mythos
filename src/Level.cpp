@@ -71,14 +71,21 @@ void Level::loadTiles()
                 }
 
                 unsigned int tileID = tile.second.get_value<unsigned int>();
+                std::string tileIDAsString = tile.second.get_value<std::string>();
 
                 if (tileID)
                 {
                     tank::Vectorf tilePos {static_cast<float>(mapPos.x * tileSize_),
                                            static_cast<float>(mapPos.y * tileSize_)};
 
+                    bool solid;
+
                     auto tileset = getTileset(tileID);
-                    bool solid = tileset.get("solid", false);
+                    auto properties = tileset.get_child_optional(tileIDAsString);
+                    if(properties)
+                    {
+                        solid = properties->get("solid", false);
+                    }
 
                     map_[mapPos.x][mapPos.y].push_back(
                         makeEntity<Tile>(tilePos, getImage(tileID), solid));
@@ -86,14 +93,14 @@ void Level::loadTiles()
                 }
 
                 //Next map position
-                if((mapPos.x + 1) % dimensions_.x)
-                {
-                    ++mapPos.x;
-                }
-                else
+                if(mapPos.x + 1 >= dimensions_.x)
                 {
                     mapPos.x = 0;
                     ++mapPos.y;
+                }
+                else
+                {
+                    ++mapPos.x;
                 }
             }
         }
