@@ -64,11 +64,10 @@ void Level::loadTiles()
         {
             for (auto& tile : layer.second.get_child("data"))
             {
-                //Testing
                 if (mapPos.x >= dimensions_.x or
                     mapPos.y >= dimensions_.y)
                 {
-                    std::cout << "Crash and burn" << std::endl;
+                    throw std::out_of_range("Exceeded map dimensions");
                 }
 
                 unsigned int tileID = tile.second.get_value<unsigned int>();
@@ -78,16 +77,14 @@ void Level::loadTiles()
                     tank::Vectorf tilePos {static_cast<float>(mapPos.x * tileSize_),
                                            static_cast<float>(mapPos.y * tileSize_)};
 
-
                     auto tileset = getTileset(tileID);
+                    bool solid = tileset.get("solid", false);
 
                     map_[mapPos.x][mapPos.y].push_back(
-                        makeEntity<Tile>(tilePos, getImage(tileID)));
+                        makeEntity<Tile>(tilePos, getImage(tileID), solid));
 
                 }
 
-                std::cout << "Looking at " << mapPos.x
-                          << ", " << mapPos.y << std::endl;
                 //Next map position
                 if((mapPos.x + 1) % dimensions_.x)
                 {
@@ -134,8 +131,8 @@ tank::Image Level::getImage(unsigned int index) const
     unsigned int clipOffset = index - key;
     unsigned int usefulSize = image.getTextureSize().x -
                               ( image.getTextureSize().x % tileSize_ );
-    clip.x = tileSize_ * clipOffset % usefulSize;
-    clip.y = tileSize_ * clipOffset / usefulSize;
+    clip.x = (tileSize_ * clipOffset) % usefulSize;
+    clip.y = (tileSize_ * clipOffset) / usefulSize;
     image.setClip(clip);
 
     return image;

@@ -8,7 +8,7 @@
 class Tile : public GameboyEntity
 {
 public:
-    Tile(tank::Vectorf pos, tank::Image const&);
+    Tile(tank::Vectorf pos, tank::Image const&, bool solid = false);
 };
 
 #endif /* TILE_HPP */
