@@ -36,13 +36,8 @@ Level::Level(std::string name, GameState& parent)
     }
 
     loadImages();
-    loadTerrain();
-    loadInteractables();
-
-    //Testing code
-    makeEntity<StartText>(tank::Vectorf{80.f, 100.f});
-    tank::Entity* e = makeEntity<tank::Entity>(tank::Vectorf{});
-    e->makeGraphic<tank::Image>(res::debugGrid);
+    loadTiles();
+    loadObjects();
 }
 
 void Level::loadImages()
@@ -59,7 +54,7 @@ void Level::loadImages()
     }
 }
 
-void Level::loadTerrain()
+void Level::loadTiles()
 {
     for (auto& layer : layers_)
     {
@@ -108,7 +103,7 @@ void Level::loadTerrain()
     }
 }
 
-void Level::loadInteractables()
+void Level::loadObjects()
 {
 }
 

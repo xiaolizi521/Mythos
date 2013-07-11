@@ -33,8 +33,8 @@ public:
     }
 private:
     void loadImages();
-    void loadTerrain();
-    void loadInteractables();
+    void loadTiles();
+    void loadObjects();
 
     boost::property_tree::ptree getTileset(unsigned int index);
 };
