@@ -26,10 +26,15 @@ public:
     Level(std::string name, GameState& parent);
 
     tank::Image getImage(unsigned int id) const;
-    //Temp to stop compiler complaining about parent_
+
+    //Placeholder to stop complaints about parent
     void changeLevel(std::string name)
     {
         parent_.changeLevel(name);
+    }
+    unsigned int getTileSize()
+    {
+        return tileSize_;
     }
 private:
     void loadImages();

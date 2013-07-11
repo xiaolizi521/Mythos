@@ -27,8 +27,7 @@ Level::Level(std::string name, GameState& parent)
     tilesets_ = mainTree_.get_child("tilesets");
     layers_ = mainTree_.get_child("layers");
 
-    boost::property_tree::ptree layers_ = mainTree_.get_child("layers");
-
+    // Allocate map space
     map_.resize(dimensions_.x);
     for(auto& column : map_)
     {
