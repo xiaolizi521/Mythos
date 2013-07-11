@@ -5,6 +5,7 @@
 #include "Tank/System/State.hpp"
 #include "Tank/System/EventHandler.hpp"
 
+class Player;
 class Level;
 
 class GameState : public tank::State
@@ -18,6 +19,8 @@ public:
     virtual void draw() override;
 private:
     std::unique_ptr<Level> currentLevel_;
+    Player* player_;
+
     bool quit(tank::EventArgs const&);
 };
 
