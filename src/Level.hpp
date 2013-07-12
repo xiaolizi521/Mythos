@@ -4,6 +4,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <deque>
 #include <boost/property_tree/ptree.hpp>
 #include "Tank/Utility/Vector.hpp"
 #include "Tank/Graphics/Image.hpp"
@@ -20,7 +21,7 @@ class Level : public tank::State
     boost::property_tree::ptree tilesets_;
     boost::property_tree::ptree mainTree_;
 
-    std::vector<std::vector<std::vector<tank::Entity*>>> map_;
+    std::deque<std::deque<std::vector<tank::Entity*>>> map_;
     std::map<unsigned int, tank::Image> images_;
 public:
     Level(std::string name, GameState& parent);
