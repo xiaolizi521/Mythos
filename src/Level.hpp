@@ -27,19 +27,19 @@ public:
     Level(std::string name, GameState& parent);
 
     tank::Image getImage(unsigned int id) const;
+    bool canMoveTo(tank::Vectoru mapPos) const;
+
+    virtual void setCamera(tank::Vectorf camera) override;
 
     //Placeholder to stop complaints about parent
     void changeLevel(std::string name)
     {
         parent_.changeLevel(name);
     }
-
     unsigned int getTileSize()
     {
         return tileSize_;
     }
-
-    virtual void setCamera(tank::Vectorf camera) override;
 private:
     void loadImages();
     void loadTiles();

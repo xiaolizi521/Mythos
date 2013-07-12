@@ -167,3 +167,23 @@ void Level::setCamera(tank::Vectorf camera)
 
     State::setCamera(camera);
 }
+
+bool Level::canMoveTo(tank::Vectoru coord) const
+{
+    if (coord.x > dimensions_.x or coord.y > dimensions_.y)
+    {
+        return false;
+    }
+
+    std::vector<tank::Entity*> const& tile = map_[coord.x][coord.y];
+    if (tile.empty())
+    {
+        return false;
+    }
+
+    return find_if(tile.begin(), tile.end(),
+                   [](tank::Entity* ent)
+    {
+        return ent->isSolid();
+    }) == tile.end();
+}
