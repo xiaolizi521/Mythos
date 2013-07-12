@@ -132,6 +132,7 @@ tank::Image Level::getImage(unsigned int index) const
 
     // TODO: Maybe move this into tank::Image?
     // TODO: Check for invalid y coord
+    /*
     tank::Rectu clip { 0, 0, tileSize_, tileSize_ };
 
     unsigned int clipOffset = index - key;
@@ -140,6 +141,9 @@ tank::Image Level::getImage(unsigned int index) const
     clip.x = (tileSize_ * clipOffset) % usefulSize;
     clip.y = (tileSize_ * clipOffset) / usefulSize;
     image.setClip(clip);
+    */
+
+    image.setClip({ tileSize_, tileSize_ }, index - key);
 
     return image;
 }
