@@ -30,7 +30,7 @@ Player::Player(tank::Vectorf pos, Level& l, GameState& gs)
     evtHandler.registerKey(sf::Keyboard::S, "playerMove");
     evtHandler.registerKey(sf::Keyboard::A, "playerMove");
 
-    level_.setCamera(getPos() + 8);
+    level_.setCamera(getPos() + level_.getTileSize() / 2);
 }
 
 void Player::update()
@@ -53,6 +53,10 @@ void Player::update()
 
         setPos(pos);
         level_.setCamera(pos + 8);
+    }
+    else
+    {
+        anim_->stop();
     }
 }
 bool Player::handleInput(tank::EventArgs const& args)
@@ -87,6 +91,7 @@ bool Player::handleInput(tank::EventArgs const& args)
         break;
     }
 
+    anim_->start();
     moving_ = true;
     return true;
 }
