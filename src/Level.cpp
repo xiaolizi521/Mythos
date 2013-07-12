@@ -55,6 +55,7 @@ void Level::loadImages()
 
 void Level::loadTiles()
 {
+    int z = -100;
     for (auto& layer : layers_)
     {
         tank::Vectoru mapPos {};
@@ -89,6 +90,7 @@ void Level::loadTiles()
                     map_[mapPos.x][mapPos.y].push_back(
                         makeEntity<Tile>(tilePos, getImage(tileID), solid));
 
+                    map_[mapPos.x][mapPos.y].back()->setLayer(z);
                 }
 
                 //Next map position
@@ -103,6 +105,8 @@ void Level::loadTiles()
                 }
             }
         }
+
+        ++z;
     }
 }
 
@@ -129,19 +133,6 @@ tank::Image Level::getImage(unsigned int index) const
     }
 
     image = images_.at(key);
-
-    // TODO: Maybe move this into tank::Image?
-    // TODO: Check for invalid y coord
-    /*
-    tank::Rectu clip { 0, 0, tileSize_, tileSize_ };
-
-    unsigned int clipOffset = index - key;
-    unsigned int usefulSize = image.getTextureSize().x -
-                              ( image.getTextureSize().x % tileSize_ );
-    clip.x = (tileSize_ * clipOffset) % usefulSize;
-    clip.y = (tileSize_ * clipOffset) / usefulSize;
-    image.setClip(clip);
-    */
 
     image.setClip({ tileSize_, tileSize_ }, index - key);
 
