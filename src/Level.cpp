@@ -5,6 +5,7 @@
 #include <stdexcept>
 #include <algorithm>
 #include <boost/property_tree/json_parser.hpp>
+#include "Tank/System/Game.hpp"
 #include "StartText.hpp"
 #include "Resources.hpp"
 #include "Tile.hpp"
@@ -156,3 +157,13 @@ boost::property_tree::ptree Level::getTileset(unsigned int index)
     throw std::runtime_error("Could not find tileset from tileid");
 }
 
+void Level::setCamera(tank::Vectorf camera)
+{
+    tank::Vectoru midPoint = tank::Game::window()->getSize() / 2;
+
+    camera *= GameboyEntity::getScale();
+    camera.x -= midPoint.x;
+    camera.y -= midPoint.y;
+
+    State::setCamera(camera);
+}

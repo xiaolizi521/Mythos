@@ -33,10 +33,13 @@ public:
     {
         parent_.changeLevel(name);
     }
+
     unsigned int getTileSize()
     {
         return tileSize_;
     }
+
+    virtual void setCamera(tank::Vectorf camera) override;
 private:
     void loadImages();
     void loadTiles();
