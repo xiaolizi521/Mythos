@@ -72,17 +72,19 @@ void Level::loadTiles()
                 }
 
                 unsigned int tileID = tile.second.get_value<unsigned int>();
-                std::string tileIDAsString = tile.second.get_value<std::string>();
 
                 if (tileID)
                 {
                     tank::Vectorf tilePos {static_cast<float>(mapPos.x * tileSize_),
                                            static_cast<float>(mapPos.y * tileSize_)};
 
-                    bool solid;
+                    bool solid = false;
 
                     auto tileset = getTileset(tileID);
-                    auto properties = tileset.get_child_optional(tileIDAsString);
+
+                    std::stringstream propertyID;
+                    propertyID << "tileproperties." << tileID - 1;
+                    auto properties = tileset.get_child_optional(propertyID.str());
                     if(properties)
                     {
                         solid = properties->get("solid", false);
