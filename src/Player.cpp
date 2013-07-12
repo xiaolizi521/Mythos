@@ -11,6 +11,7 @@ Player::Player(tank::Vectorf pos, Level& l, GameState& gs)
     , gameState_(gs)
     , moving_(false)
 {
+    // Set up animation
     anim_ = makeGraphic<tank::Animation>(res::player,
                                          tank::Vectoru{ level_.getTileSize(),
                                                         level_.getTileSize()});
@@ -20,6 +21,7 @@ Player::Player(tank::Vectorf pos, Level& l, GameState& gs)
     anim_->add("left",  { 12, 13, 14, 15 }, 100);
     anim_->setClip({0, 0, 16, 16});
 
+    // Set up events
     auto& evtHandler = gameState_.getEventHandler();
     evtHandler.registerEvent("playerMove", tank::EventType::button_held);
     evtHandler.registerEventListener("playerMove",
@@ -30,6 +32,11 @@ Player::Player(tank::Vectorf pos, Level& l, GameState& gs)
     evtHandler.registerKey(sf::Keyboard::S, "playerMove");
     evtHandler.registerKey(sf::Keyboard::A, "playerMove");
 
+    // Set initial tilePos
+    tilePos_.x = getPos().x / level_.getTileSize();
+    tilePos_.y = getPos().y / level_.getTileSize();
+
+    // Set initial camera position
     level_.setCamera(getPos() + level_.getTileSize() / 2);
 }
 
@@ -39,7 +46,7 @@ void Player::update()
     {
         tank::Vectorf pos = getPos();
 
-        if (std::abs(toMove_) < speed_)
+        if (std::abs(toMove_) <= speed_)
         {
             pos += direction_ * toMove_;
             toMove_ = 0;
@@ -52,7 +59,7 @@ void Player::update()
         }
 
         setPos(pos);
-        level_.setCamera(pos + 8);
+        level_.setCamera(getPos() + level_.getTileSize() / 2);
     }
     else
     {
@@ -73,7 +80,7 @@ bool Player::handleInput(tank::EventArgs const& args)
     {
     case sf::Keyboard::W:
         anim_->select("up");
-        direction_.y = - 1;
+        direction_.y = -1;
         break;
     case sf::Keyboard::D:
         anim_->select("right");
@@ -91,7 +98,12 @@ bool Player::handleInput(tank::EventArgs const& args)
         break;
     }
 
-    anim_->start();
-    moving_ = true;
+    if(level_.canMoveTo(tilePos_ + direction_))
+    {
+        tilePos_ += direction_;
+        anim_->start();
+        moving_ = true;
+    }
+
     return true;
 }

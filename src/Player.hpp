@@ -20,8 +20,9 @@ private:
     GameState& gameState_;
 
     bool moving_;
-    tank::Vectorf direction_;
+    tank::Vectori direction_;
     float toMove_;
+    tank::Vectoru tilePos_;
 
     static const float speed_;
     bool handleInput(tank::EventArgs const& e);
