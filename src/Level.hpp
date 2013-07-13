@@ -31,11 +31,6 @@ public:
 
     virtual void setCamera(tank::Vectorf camera) override;
 
-    //Placeholder to stop complaints about parent
-    void changeLevel(std::string name)
-    {
-        parent_.changeLevel(name);
-    }
     unsigned int getTileSize()
     {
         return tileSize_;

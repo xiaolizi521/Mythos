@@ -9,6 +9,7 @@
 #include "StartText.hpp"
 #include "Resources.hpp"
 #include "Tile.hpp"
+#include "Character.hpp"
 
 Level::Level(std::string name, GameState& parent)
     : parent_(parent)
@@ -71,12 +72,14 @@ void Level::loadTiles()
                     throw std::out_of_range("Exceeded map dimensions");
                 }
 
-                unsigned int tileID = tile.second.get_value<unsigned int>();
+                const unsigned int tileID = tile.second.get_value<unsigned int>();
 
                 if (tileID)
                 {
-                    tank::Vectorf tilePos {static_cast<float>(mapPos.x * tileSize_),
-                                           static_cast<float>(mapPos.y * tileSize_)};
+                    tank::Vectorf entPos {
+                        static_cast<float>(mapPos.x * tileSize_),
+                        static_cast<float>(mapPos.y * tileSize_)
+                    };
 
                     bool solid = false;
 
@@ -91,7 +94,7 @@ void Level::loadTiles()
                     }
 
                     map_[mapPos.x][mapPos.y].push_back(
-                        makeEntity<Tile>(tilePos, getImage(tileID), solid));
+                        makeEntity<Tile>(entPos, getImage(tileID), solid));
 
                     map_[mapPos.x][mapPos.y].back()->setLayer(z);
                 }
@@ -115,48 +118,35 @@ void Level::loadTiles()
 
 void Level::loadObjects()
 {
-    /*
     for (auto& layer : layers_)
     {
         if (layer.second.get<std::string>("type") == "objectgroup")
         {
-            for (auto& tile : layer.second.get_child("objects"))
+            for (auto& object : layer.second.get_child("objects"))
             {
-                tank::Vectorf tilePos {static_cast<float>(mapPos.x * tileSize_),
-                                       static_cast<float>(mapPos.y * tileSize_)};
+                const tank::Vectorf entPos {
+                    object.second.get<float>("x"),
+                    object.second.get<float>("y")
+                };
 
-                bool solid = false;
+                const tank::Vectoru mapPos = {
+                    static_cast<unsigned int>(entPos.x / tileSize_),
+                    static_cast<unsigned int>(entPos.y / tileSize_)
+                };
 
-                auto tileset = getTileset(tileID);
+                std::string type = object.second.get<std::string>("type");
 
-                std::stringstream propertyID;
-                auto properties = tileset.get_child_optional(propertyID.str());
-                if(properties)
+                if(type == "civilian" or type == "companion" or type == "")
                 {
-                    solid = properties->get("solid", false);
-                }
+                    const unsigned int tileID = object.second.get<unsigned int>("gid");
 
-                map_[mapPos.x][mapPos.y].push_back(
-                    makeEntity<Tile>(tilePos, getImage(tileID), solid));
-
-                map_[mapPos.x][mapPos.y].back()->setLayer(z);
-
-                //Next map position
-                if(mapPos.x + 1 >= dimensions_.x)
-                {
-                    mapPos.x = 0;
-                    ++mapPos.y;
-                }
-                else
-                {
-                    ++mapPos.x;
+                    map_[mapPos.x][mapPos.y].push_back(
+                        makeEntity<Character>(entPos, this, parent_,
+                                              getImage(tileID), object.second));
                 }
             }
         }
-
-        ++z;
     }
-    */
 }
 
 tank::Image Level::getImage(unsigned int index) const
