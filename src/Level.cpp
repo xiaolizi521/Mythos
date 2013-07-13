@@ -115,6 +115,48 @@ void Level::loadTiles()
 
 void Level::loadObjects()
 {
+    /*
+    for (auto& layer : layers_)
+    {
+        if (layer.second.get<std::string>("type") == "objectgroup")
+        {
+            for (auto& tile : layer.second.get_child("objects"))
+            {
+                tank::Vectorf tilePos {static_cast<float>(mapPos.x * tileSize_),
+                                       static_cast<float>(mapPos.y * tileSize_)};
+
+                bool solid = false;
+
+                auto tileset = getTileset(tileID);
+
+                std::stringstream propertyID;
+                auto properties = tileset.get_child_optional(propertyID.str());
+                if(properties)
+                {
+                    solid = properties->get("solid", false);
+                }
+
+                map_[mapPos.x][mapPos.y].push_back(
+                    makeEntity<Tile>(tilePos, getImage(tileID), solid));
+
+                map_[mapPos.x][mapPos.y].back()->setLayer(z);
+
+                //Next map position
+                if(mapPos.x + 1 >= dimensions_.x)
+                {
+                    mapPos.x = 0;
+                    ++mapPos.y;
+                }
+                else
+                {
+                    ++mapPos.x;
+                }
+            }
+        }
+
+        ++z;
+    }
+    */
 }
 
 tank::Image Level::getImage(unsigned int index) const
