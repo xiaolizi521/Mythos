@@ -18,7 +18,7 @@ GameState::GameState()
     getEventHandler().registerKey(sf::Keyboard::Escape, "quit", false);
 
     currentLevel_.reset(new Level("testmap", *this));
-    player_ = currentLevel_->makeEntity<Player>(tank::Vectorf{0.f,0.f}, currentLevel_, *this);
+    player_ = currentLevel_->makeEntity<Player>(tank::Vectorf{0.f,0.f}, currentLevel_.get(), *this);
 }
 
 bool GameState::quit(tank::EventArgs const& evtArgs)
