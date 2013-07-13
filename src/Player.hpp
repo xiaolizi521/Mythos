@@ -9,7 +9,7 @@
 class Player : public TileObject
 {
 public:
-    Player(tank::Vectorf pos, Level& level, GameState& gameState);
+    Player(tank::Vectorf pos, Level* level, GameState& gameState);
 
     virtual void update() override;
 private:

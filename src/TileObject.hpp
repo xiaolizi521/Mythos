@@ -17,7 +17,7 @@ class TileObject : public GameboyEntity
 public:
     static const float speed_;
 
-    TileObject(tank::Vectorf pos, Level& level, GameState& gameState);
+    TileObject(tank::Vectorf pos, Level* level, GameState& gameState);
 
     virtual bool attemptMove(tank::Vectori direction);
     virtual void updateMove();

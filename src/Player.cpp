@@ -3,7 +3,7 @@
 #include <cmath>
 #include "Resources.hpp"
 
-Player::Player(tank::Vectorf pos, Level& l, GameState& gs)
+Player::Player(tank::Vectorf pos, Level* l, GameState& gs)
     : TileObject(pos, l, gs)
 {
     // Set up animation

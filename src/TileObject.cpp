@@ -2,9 +2,9 @@
 
 const float TileObject::speed_ = 1.f;
 
-TileObject::TileObject(tank::Vectorf pos, Level& l, GameState& gs)
+TileObject::TileObject(tank::Vectorf pos, Level* l, GameState& gs)
     : GameboyEntity(pos)
-    , level_(&l)
+    , level_(l)
     , gameState_(gs)
     , moving_(false)
     , toMove_()
